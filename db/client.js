@@ -1,11 +1,7 @@
-// Load the config of knexfile.js
-const knexfile = require("../knexfile")
+const knexfile = require("../knexfile"); // requring our knexfile.js
 
-const knexConnector = require("knex")
-// The knexConnctor is a function that creates a client for us
-// We pass in the configuration (development) as an arugment
-const knex = knexConnector(knexfile.development)
+const knexConnector = require("knex"); // requiring knex from npm
 
-// Export the client
-// Anywhere we make queries to our db using knex, we'll need to import this client
-module.exports = knex
+module.exports = knexConnector(knexfile.development);
+// export the client
+// anywhere we make quieries to our db using knex

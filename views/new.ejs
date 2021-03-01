@@ -1,0 +1,19 @@
+<%- include('./partials/header') %>
+
+<form action="/new" method="POST">
+<div class="mb-3">
+    <label for="logoUrl" class="form-label">Logo Url</label>
+    <input name ='logoUrl' type="text" class="form-control" id="logoUrl" placeholder="Your logo Url">
+  </div>
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <input name ='name' type="text" class="form-control" id="name" placeholder="Your cohort name">
+  </div>
+  <div class="mb-3">
+    <label name ='members' for="members" class="form-label">Members</label>
+    <textarea name = 'members' class="form-control" id="members" placeholder="Jon Snow, Arya Stark" rows="3"></textarea>
+  </div>
+  <button type="submit" class="btn btn-outline-primary">Submit</button>
+</form>
+
+<%- include('./partials/footer') %>
