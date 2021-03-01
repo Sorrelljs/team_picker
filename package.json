@@ -1,0 +1,11 @@
+{
+  "name": "super_team_picker",
+  "version": "1.0.0",
+  "description": "Sreekkanth, Sorrell",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
