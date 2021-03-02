@@ -61,13 +61,37 @@ app.get("/cohorts", (request, response) => {
 		.then((data) => {
 			// array of objects
 			console.log(data);
-			response.render("show", { data });
+			// change show to index.ejs and list all cohorts in database
+			response.render("index", { cohorts: data });
 		});
 });
 
 app.get("/cohorts/:id", (req, res) => {
 	let id = req.params.id;
-	res.send(req.params);
+	let method = req.query.method;
+	console.log(method);
+	let quantity = req.query.quantity;
+	console.log(quantity);
+	// logic for making teams
+
+	// logic for making teams
+
+	knex
+		.select("*")
+		.from("cohorts")
+		.where("id", id)
+		.then((data) => {
+			if (method === teamCount) {
+			} else if (method === numberTeam) {
+			}
+
+			if (data.length === 0) {
+				res.send(`<h1> cannot find article with this id </h1>`);
+			} else {
+				console.log(data);
+				res.render("show", { data });
+			}
+		});
 });
 
 const PORT = process.env.PORT || 3000;
