@@ -67,29 +67,69 @@ app.get("/cohorts", (request, response) => {
 });
 
 app.get("/cohorts/:id", (req, res) => {
-	let id = req.params.id;
-	let method = req.query.method;
-	console.log(method);
-	let quantity = req.query.quantity;
-	console.log(quantity);
-	// logic for making teams
+	let id = req.params.id; // team id
+	let method = req.query.method; // which method they use
+	let quantity = req.query.quantity; // how many people in each team
+	// console.log(quantity, method, id);
 
 	// logic for making teams
-
 	knex
 		.select("*")
 		.from("cohorts")
 		.where("id", id)
-		.then((data) => {
-			if (method === teamCount) {
-			} else if (method === numberTeam) {
-			}
+		.first()
+		.then((cohort) => {
+			if (method && quantity && cohort) {
+				if (method === "teamCount") {
+					console.log(method, quantity, cohort.name, cohort.members);
+					let membersArr = [];
+					membersArr = (cohort.members.split(","));
+					console.log(membersArr)
 
-			if (data.length === 0) {
-				res.send(`<h1> cannot find article with this id </h1>`);
+					function shuffle(arr) {
+						let ctr = arr.length, temp, index;
+
+					// While there are elements in the array
+						while (ctr > 0) {
+					// Pick a random index
+							index = Math.floor(Math.random() * ctr);
+					// Decrease ctr by 1
+							ctr--;
+					// And swap the last element with it
+							temp = arr[ctr];
+							arr[ctr] = arr[index];
+							arr[index] = temp;
+						}
+						return arr;
+					}
+
+					console.log(shuffle(membersArr))
+
+					let n = Number(quantity);
+
+					//tweak this to add more items per line
+
+					const teams = new Array(Math.ceil(membersArr.length / n))
+						.fill()
+						.map((_) => membersArr.splice(0, n));
+					console.log(teams);
+				} else if (method === "numberTeam") {
+					console.log(method, quantity, cohort.name, cohort.members);
+				}
+			} else if (cohort || !method || !quantity) {
+				res.render("show", { cohort });
+
+				// if (cohort || !method || !quantity) {
+				// 	res.render("show", { cohort });
+				// } else if (method && quantity && cohort) {
+				// 	if (method === "teamCount") {
+				// 		console.log(cohort.name, cohort.members, quantity);
+				// 	} else if (method === "numberTeam") {
+				// 		console.log(cohort.name, cohort.members, quantity);
+				// 	}
+				/////
 			} else {
-				console.log(data);
-				res.render("show", { data });
+				res.send(`<h1> cannot find article with this id </h1>`);
 			}
 		});
 });
