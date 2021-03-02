@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 const knex = require("./db/client");
 const methodOverride = require("method-override");
+const { name } = require("ejs");
 // const router = express.Router();
 
 const app = express();
@@ -14,6 +15,21 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
 
+// Middleware to override HTTP verb
+app.use(
+	methodOverride((request, response) => {
+		if (request.body && request.body._method) {
+			const method = request.body._method;
+
+			// Delete method off of "request.body" because we won't be using it after overriding.
+			delete request.body._method;
+
+			// Whatever is returned from this callback will be the new HTTP verb for the request.
+			return method;
+		}
+	})
+);
+
 app.get("/", (req, res) => {
 	res.render("homepage");
 });
@@ -23,23 +39,36 @@ app.get("/new", (req, res) => {
 });
 
 app.post("/new", (req, res) => {
-	const { logoUrl, name, members } = req.body;
+	const { logoUrl, name, members } = req.body || "undefined";
 	knex("cohorts")
-    .insert(
-      {
-        logoUrl,
-        name,
-        members,
-      },
-      "*"
-    )
-    .then((data) => {
-      console.table(data);
-      res.render("show");
-    });
+		.insert(
+			{
+				logoUrl,
+				name,
+				members,
+			},
+			"*"
+		)
+		.then((data) => {
+			console.table(data);
+			res.render("show", { data });
+		});
+});
+app.get("/cohorts", (request, response) => {
+	knex
+		.select("*")
+		.from("cohorts")
+		.then((data) => {
+			// array of objects
+			console.log(data);
+			response.render("show", { data });
+		});
 });
 
-
+app.get("/cohorts/:id", (req, res) => {
+	let id = req.params.id;
+	res.send(req.params);
+});
 
 const PORT = process.env.PORT || 3000;
 const ADDRESS = "localhost";
