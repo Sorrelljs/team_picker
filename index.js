@@ -38,8 +38,9 @@ app.get("/new", (req, res) => {
 	res.render("new");
 });
 
-app.post("/new", (req, res) => {
+app.post("/cohorts", (req, res) => {
 	const { logoUrl, name, members } = req.body || "undefined";
+
 	knex("cohorts")
 		.insert(
 			{
@@ -49,9 +50,12 @@ app.post("/new", (req, res) => {
 			},
 			"*"
 		)
-		.then((data) => {
-			console.table(data);
-			res.render("show", { data });
+		.then((cohorts) => {
+			console.table(cohorts[0]);
+
+			let cohort = cohorts[0];
+			let cohortsId = cohorts[0].id;
+			res.redirect(`/cohorts/${cohortsId}`);
 		});
 });
 app.get("/cohorts", (request, response) => {
@@ -79,7 +83,9 @@ app.get("/cohorts/:id", (req, res) => {
 		.where("id", id)
 		.first()
 		.then((cohort) => {
-			if (method && quantity && cohort) {
+			if (cohort && !method && !quantity) {
+				res.render("show", { cohort, teams: null });
+			} else if (method && quantity && cohort) {
 				if (method === "numberTeam") {
 					console.log(method, quantity, cohort.name, cohort.members);
 					let membersArr = [];
@@ -163,18 +169,6 @@ app.get("/cohorts/:id", (req, res) => {
 					console.log(teams);
 					res.render("show", { cohort, teams });
 				}
-			} else if (cohort || !method || !quantity) {
-				res.render("show", { cohort });
-
-				// if (cohort || !method || !quantity) {
-				// 	res.render("show", { cohort });
-				// } else if (method && quantity && cohort) {
-				// 	if (method === "teamCount") {
-				// 		console.log(cohort.name, cohort.members, quantity);
-				// 	} else if (method === "numberTeam") {
-				// 		console.log(cohort.name, cohort.members, quantity);
-				// 	}
-				/////
 			} else {
 				res.send(`<h1> cannot find article with this id </h1>`);
 			}
