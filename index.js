@@ -80,22 +80,24 @@ app.get("/cohorts/:id", (req, res) => {
 		.first()
 		.then((cohort) => {
 			if (method && quantity && cohort) {
-				if (method === "teamCount") {
+				if (method === "numberTeam") {
 					console.log(method, quantity, cohort.name, cohort.members);
 					let membersArr = [];
-					membersArr = (cohort.members.split(","));
-					console.log(membersArr)
+					membersArr = cohort.members.split(",");
 
+					// Shuffle function
 					function shuffle(arr) {
-						let ctr = arr.length, temp, index;
+						let ctr = arr.length,
+							temp,
+							index;
 
-					// While there are elements in the array
+						// While there are elements in the array
 						while (ctr > 0) {
-					// Pick a random index
+							// Pick a random index
 							index = Math.floor(Math.random() * ctr);
-					// Decrease ctr by 1
+							// Decrease ctr by 1
 							ctr--;
-					// And swap the last element with it
+							// And swap the last element with it
 							temp = arr[ctr];
 							arr[ctr] = arr[index];
 							arr[index] = temp;
@@ -103,18 +105,59 @@ app.get("/cohorts/:id", (req, res) => {
 						return arr;
 					}
 
-					console.log(shuffle(membersArr))
+					// console.log(shuffle(membersArr));
+					shuffle(membersArr);
+
+					// Split teams by teamCount number
 
 					let n = Number(quantity);
-
-					//tweak this to add more items per line
-
 					const teams = new Array(Math.ceil(membersArr.length / n))
 						.fill()
 						.map((_) => membersArr.splice(0, n));
 					console.log(teams);
-				} else if (method === "numberTeam") {
+				} else if (method === "teamCount") {
 					console.log(method, quantity, cohort.name, cohort.members);
+					let membersArr = [];
+					membersArr = cohort.members.split(",");
+
+					// Shuffle function
+					function shuffle(arr) {
+						let ctr = arr.length,
+							temp,
+							index;
+
+						// While there are elements in the array
+						while (ctr > 0) {
+							// Pick a random index
+							index = Math.floor(Math.random() * ctr);
+							// Decrease ctr by 1
+							ctr--;
+							// And swap the last element with it
+							temp = arr[ctr];
+							arr[ctr] = arr[index];
+							arr[index] = temp;
+						}
+						return arr;
+					}
+					shuffle(membersArr);
+					// console.log(membersArr);
+
+					let n = Number(quantity);
+
+					const result = [];
+					for (let i = 0; i < n; i++) {
+						result.push([]);
+					}
+					let teamIndex = 0;
+					while (membersArr.length) {
+						result[teamIndex].push(membersArr.pop());
+						if (teamIndex === n - 1) {
+							teamIndex = 0;
+						} else {
+							teamIndex++;
+						}
+					}
+					console.log(result);
 				}
 			} else if (cohort || !method || !quantity) {
 				res.render("show", { cohort });
