@@ -38,14 +38,24 @@
     
       
       <!-- teams broken down -->
+      <table><tr>
+        <th>#</th>
+        <th>Members</th>
+      </tr>
+      <tr>
+        <td>
 
-      <% if (teams) { %>
-        <ul class="list-group list-group-flush">
-          <% teams.forEach(team => { %>
-            <li class="list-group-item"><%= team.toString() %></li>
-          <% }) %> 
-          <% } %> 
-        </ul>
+       
+          <% if (teams) { %>
+            <ul class="list-group list-group-flush">
+              <% teams.forEach(team => { %>
+                <li class="list-group-item"><%= team.toString() %></li>
+                <% }) %> 
+                <% } %> 
+        </td>
+      </tr>
+          </ul>
+        </table>
       <!-- <table class="table">
         <thead>
           <tr>
