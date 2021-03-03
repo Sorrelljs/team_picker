@@ -26,7 +26,15 @@
       </form>
 
       <!-- teams broken down -->
-      <table class="table">
+
+      <% if (teams) { %>
+        <ul class="list-group list-group-flush">
+          <% teams.forEach(team => { %>
+            <li class="list-group-item"><%= team.toString() %></li>
+          <% }) %> 
+          <% } %>
+        </ul>
+      <!-- <table class="table">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -44,7 +52,7 @@
             <tr>
           </tr>
         </thead>
-        </table>
+        </table> -->
 
 
         

@@ -115,6 +115,9 @@ app.get("/cohorts/:id", (req, res) => {
 						.fill()
 						.map((_) => membersArr.splice(0, n));
 					console.log(teams);
+
+					res.render("show", { cohort, teams });
+					// TeamCount
 				} else if (method === "teamCount") {
 					console.log(method, quantity, cohort.name, cohort.members);
 					let membersArr = [];
@@ -144,20 +147,21 @@ app.get("/cohorts/:id", (req, res) => {
 
 					let n = Number(quantity);
 
-					const result = [];
+					const teams = [];
 					for (let i = 0; i < n; i++) {
-						result.push([]);
+						teams.push([]);
 					}
 					let teamIndex = 0;
 					while (membersArr.length) {
-						result[teamIndex].push(membersArr.pop());
+						teams[teamIndex].push(membersArr.pop());
 						if (teamIndex === n - 1) {
 							teamIndex = 0;
 						} else {
 							teamIndex++;
 						}
 					}
-					console.log(result);
+					console.log(teams);
+					res.render("show", { cohort, teams });
 				}
 			} else if (cohort || !method || !quantity) {
 				res.render("show", { cohort });
