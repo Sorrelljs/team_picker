@@ -14,7 +14,19 @@ app.use(logger("dev"));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
+app.use(
+	methodOverride((request, response) => {
+		if (request.body && request.body._method) {
+			const method = request.body._method;
 
+			// Delete method off of "request.body" because we won't be using it after overriding.
+			delete request.body._method;
+
+			// Whatever is returned from this callback will be the new HTTP verb for the request.
+			return method;
+		}
+	})
+);
 // Middleware to override HTTP verb
 app.use(
 	methodOverride((request, response) => {
@@ -74,7 +86,7 @@ app.get("/cohorts/:id", (req, res) => {
 	let id = req.params.id; // team id
 	let method = req.query.method; // which method they use
 	let quantity = req.query.quantity; // how many people in each team
-	// console.log(quantity, method, id);
+	console.log(quantity, method, id);
 
 	// logic for making teams
 	knex
@@ -173,6 +185,43 @@ app.get("/cohorts/:id", (req, res) => {
 				res.send(`<h1> cannot find article with this id </h1>`);
 			}
 		});
+});
+// Delete cohort
+app.delete("/cohorts/:id", (request, response) => {
+	const id = request.params.id;
+
+	knex("cohorts")
+		.where("id", id)
+		.del()
+		.then(() => {
+			console.log(`Deleted article with id: ${id}`);
+			response.redirect("/cohorts");
+		});
+});
+//edit cohort
+app.get("/cohorts/:id/edit", (request, response) => {
+	const id = request.params.id;
+	knex("cohorts")
+		.where("id", id)
+		.first()
+		.then((cohort) => {
+			if (cohort) {
+				response.render("edit", { cohort });
+			}
+		});
+});
+app.patch("/cohorts/:id", (request, response) => {
+	const id = request.params.id;
+	const { logoUrl, name, members } = request.body;
+
+	knex("cohorts")
+		.where("id", id)
+		.update({
+			logoUrl,
+			name,
+			members,
+		})
+		.then(() => response.redirect(`/cohorts/${id}`));
 });
 
 const PORT = process.env.PORT || 3000;
