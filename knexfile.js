@@ -15,7 +15,6 @@ module.exports = {
 		},
 		migrations: {
 			// Migrations are queries to build the schema of our database
-			// e.g. creating tables, altering tables, deleting tables
 			tableName: "migrations",
 			directory: "./db/migrations",
 		},

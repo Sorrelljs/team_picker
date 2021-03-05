@@ -2,87 +2,70 @@
 
 
 
-<h1>show page</h1>
 
-<div class="card-group">
-    <div class="card">
-      <img src="<%= cohort.logoUrl %>" class="rounded-circle"" width="75" height="75" alt="...">
+
+<div class="card-group px-3">
+  <div class="card">
       <div class="card-body">
         <h5 class="card-title"><%= cohort.name %></h5>
         <p class="card-text"> <%= cohort.members %></p>
-        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+        <hr>
         
         <!-- teams -->
-        <form action="" method = "GET">
-          <label name = 'teamCount' class="btn btn-secondary active">
-            <input type="radio" name="method" id="teamCount" value="teamCount"checked> Team count
-          </label>
-          <label name="numberTeam" class="btn btn-secondary">
-            <input type="radio" name="method" id="numberTeam" value="numberTeam"> Number Per Team
-          </label>
-          <label for="quantity">Quantity</label>
-          <input type="number" id="quantity" name="quantity">
-          
-          <button type="submit" class="btn btn-outline-primary">Assign Teams</button>
-        </form>
-        <!-- Adds _method = "Edit" to the body of the request -->
         
+        <p class="mb-1">Method</p>
+        <form action="" method = "GET">
+          <label name ='teamCount' class="btn btn-secondary active mt-0">
+            <input type="radio" name="method" id="teamCount" value="teamCount" checked> Team count
+          </label><br>
+          <label name="numberTeam" class="btn btn-secondary mt-2 mb-2">
+            <input type="radio" name="method" id="numberTeam" value="numberTeam"> Number Per Team
+          </label><br>
+          <label for="quantity" class="mt-2 mb-1">Quantity</label><br>
+          <div class="d-grid gap-2">
+            <input type="number" id="quantity" name="quantity" min="1"><br>
+            <button type="submit" class="btn btn-outline-primary mb-2">Assign Teams</button>
+          </div>
+        </form>
         <!-- Adds _method = "Delete" to the body of the request -->
         <form class="mt-2" action="/cohorts/<%= cohort.id %>" method="POST">
           <input type="hidden" name="_method" value="DELETE">
-          <a href="/cohorts/<%= cohort.id %>/edit" class="btn btn-warning">Edit</a>
+          <!-- Adds _method = "Edit" to the body of the request -->
+          <a href="/cohorts/<%= cohort.id %>/edit" class="btn btn-warning me-2 px-3">Edit</a>
           <button type="submit" class="btn btn-danger">Delete</button>
         </form>
-        
       </div>
     
       
       <!-- teams broken down -->
-      <table><tr>
-        <th>#</th>
-        <th>Members</th>
-      </tr>
-      <tr>
-        <td>
-
-       
-          <% if (teams) { %>
-            <ul class="list-group list-group-flush">
-              <% teams.forEach(team => { %>
-                <li class="list-group-item"><%= team.toString() %></li>
-                <% }) %> 
-                <% } %> 
-        </td>
-      </tr>
-          </ul>
-        </table>
-      <!-- <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Members</th>
-          </tr>
+      <% if (teams) { %>
+      <div class="table-responsive px-2">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Members</th>  
+            </tr>
+          </thead>
+          
           <tbody>
+            
+              <%let i = 1 %>
+            <% teams.forEach(team => { %>
+              
             <tr>
-              <th scope="row">1</th>
-              <td>mark</td>
+              <th scope="row"><%= i++ %></th>
+              <td><%= team.toString() %></td>
             </tr>
-            <tr>
-              <th scope = 'row'>2</th>
-              <td>jeff</td>
-            </tr>
-            <tr>
-          </tr>
-        </thead>
-        </table> -->
-
-
-        
+          <% }) %> 
+        <% } %> 
+        </tbody>
+        </table>
       </div>
+  </div>
+</div>
+ 
 
 
 
 <%- include('./partials/footer') %>
-
-
-

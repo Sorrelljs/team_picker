@@ -1,22 +1,24 @@
 <!-- here i need to list all cards in index / db-->
 <%- include('./partials/header') %>
 
-<div class="list-group">
+<div class="list-group px-3">
     <% cohorts.forEach(cohort => { %>
-
-    
-    <div class="card">
-      <img src="<%= cohort.logoUrl %>" class="rounded-circle"" width="75" height="75" alt="...">
+    <div class="card mb-2">
+      <div class="container ms-0 mt-2">
+        <img src="<%= cohort.logoUrl %>" class="rounded-circle"" width="75" height="75" alt="...">
+        <h5 style="display:inline;"class="card-title"><%= cohort.name %></h5>
+      </div>
       <div class="card-body">
           <!-- for loop all of these out-->
-        <h5 class="card-title"><%= cohort.name %></h5>
-        <p class="card-text"> <%= cohort.members %></p>
+        <p class="card-text mt-2 mb-2"> <%= cohort.members %></p>
         <form action="/cohorts/<%= cohort.id %>" method="get">
-        <button type="submit" class="btn btn-primary">Show cohorts</button>
+        <button type="submit" class="btn btn-primary mt-2 ">Show cohorts</button>
         </form>
       </div>
-    <% }) %>
-  </div>
+    </div>
+  <% }) %>
+</div>
+  
 
 
 

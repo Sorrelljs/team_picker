@@ -98,38 +98,39 @@ app.get("/cohorts/:id", (req, res) => {
 			if (cohort && !method && !quantity) {
 				res.render("show", { cohort, teams: null });
 			} else if (method && quantity && cohort) {
-				if (method === "numberTeam") {
-					console.log(method, quantity, cohort.name, cohort.members);
-					let membersArr = [];
-					membersArr = cohort.members.split(",");
+				// Shuffle function
+				function shuffle(arr) {
+					let ctr = arr.length,
+						temp,
+						index;
 
-					// Shuffle function
-					function shuffle(arr) {
-						let ctr = arr.length,
-							temp,
-							index;
-
-						// While there are elements in the array
-						while (ctr > 0) {
-							// Pick a random index
-							index = Math.floor(Math.random() * ctr);
-							// Decrease ctr by 1
-							ctr--;
-							// And swap the last element with it
-							temp = arr[ctr];
-							arr[ctr] = arr[index];
-							arr[index] = temp;
-						}
-						return arr;
+					// While there are elements in the array
+					while (ctr > 0) {
+						// Pick a random index
+						index = Math.floor(Math.random() * ctr);
+						// Decrease ctr by 1
+						ctr--;
+						// And swap the last element with it
+						temp = arr[ctr];
+						arr[ctr] = arr[index];
+						arr[index] = temp;
 					}
+					return arr;
+				}
+
+				if (method === "numberTeam") {
+					// console.log(method, quantity, cohort.name, cohort.members);
+
+					let membersArr = cohort.members.split(",");
 
 					// console.log(shuffle(membersArr));
 					shuffle(membersArr);
+					let n = Number(quantity);
 
 					// Split teams by teamCount number
+					let remainingMembers = membersArr.length % n;
 
-					let n = Number(quantity);
-					const teams = new Array(Math.ceil(membersArr.length / n))
+					const teams = new Array(Math.ceil(membersArr.length / 2))
 						.fill()
 						.map((_) => membersArr.splice(0, n));
 					console.log(teams);
@@ -179,13 +180,38 @@ app.get("/cohorts/:id", (req, res) => {
 						}
 					}
 					console.log(teams);
+
 					res.render("show", { cohort, teams });
 				}
 			} else {
-				res.send(`<h1> cannot find article with this id </h1>`);
+				res.send(
+					`<h1> Please select a method and quantity to generate teams</h1>`
+				);
 			}
 		});
 });
+
+// app.post("/cohorts/:id", (req, res) => {
+// 	// This route handles a post request instead of a GET.
+// 	// Only with GET requests is the form data available in the query string | e.g 'request.query.etc'
+// 	// With a post request, we access the data from 'request.body' || res.body
+// 	// which is only availble if the 'urlendcoded'
+// 	// middleware is used
+// 	const COOKIE_MAX_AGE = 1000 * 60 * 60 * 24 * 30; // number of milliseconds * min * hour * day
+// 	const { quantity, method } = req.body;
+// 	res.cookie("quantity", quantity, "method", method, {
+// 		maxAge: COOKIE_MAX_AGE,
+// 	});
+// 	res.redirect("/cohorts/:id");
+
+// 	// 'response.cookie' is available to use if 'cookie-parse' middleware is setup
+// 	// we use it to send back cookies to the client. The arguments are:
+// 	// response.cookie(<name-of-cookie> , <value-of-cookie> , <options> )
+// 	// The 'maxAge' property of options sets the age of the cookie.
+// 	// The time starts form when the cookie was set. Plus the number of milliseconds for the age
+// 	// until expiration
+// });
+
 // Delete cohort
 app.delete("/cohorts/:id", (request, response) => {
 	const id = request.params.id;

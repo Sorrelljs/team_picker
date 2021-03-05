@@ -1,8 +1,7 @@
 exports.up = function (knex) {
 	return knex.schema.createTable("cohorts", (table) => {
 		table.bigIncrements("id");
-		table.string("logoUrl");
-		// make text
+		table.text("logoUrl");
 		table.string("name");
 		table.text("members");
 	});
